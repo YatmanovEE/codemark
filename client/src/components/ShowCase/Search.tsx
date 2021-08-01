@@ -6,16 +6,15 @@ export const Search: FC = () => {
   const [value, setValue] = useState("");
   const dispatch = useAppDispatch();
   const inputHandler: ReactEventHandler<HTMLInputElement> = (e) => {
-    console.log(e.currentTarget.value);
-    if (e.currentTarget.value.match(/[0-9]/)) {
-      setValue(e.currentTarget.value);
-      dispatch(clearError());
-    } else {
+    if (e.currentTarget.value.match(/[^A-Za-z,]/)) {
       dispatch(
         createError({
           error: "БлаБла",
         })
       );
+    } else {
+      setValue(e.currentTarget.value);
+      dispatch(clearError());
     }
   };
   return (

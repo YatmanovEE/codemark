@@ -1,18 +1,19 @@
 import { FC } from "react";
-import { useAppSelector } from "../../redux/hooks";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
 import { Search } from "./Search";
-import { selectError, selectShowCaseList } from "./ShowCase.slice";
+import { ShowCaseList } from "./ShowCaseList";
 
 const ShowCase: FC = () => {
-  const error = useAppSelector(selectError);
-  const showCase = useAppSelector(selectShowCaseList);
+  const { error, loading } = useSelector(({ showCase }: RootState) => ({
+    error: showCase.error,
+    loading: showCase.loading,
+  }));
   return (
     <div className="wrapper show-case_wrapper">
       {error}
       <Search />
-      {showCase.map((imageShowCase, i) => {
-        return <img src={imageShowCase} alt="" key={i + Math.random()}></img>;
-      })}
+      <ShowCaseList />
     </div>
   );
 };

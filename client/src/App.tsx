@@ -1,7 +1,13 @@
+import { Notice } from "./components/Notice/Notice";
 import ShowCase from "./components/ShowCase/ShowCase";
 
 function App() {
-  return <ShowCase />;
+  return (
+    <>
+      <Notice />
+      <ShowCase />
+    </>
+  );
 }
 
 export default App;

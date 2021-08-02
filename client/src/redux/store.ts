@@ -1,11 +1,13 @@
 import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
 import showCase from "../components/ShowCase/ShowCase.slice";
 import notice from "../components/Notice/Notivce.slice";
+import searchValue from "../components/Search/Search.slice";
 
 export const store = configureStore({
   reducer: {
     showCase,
     notice,
+    searchValue,
   },
 });
 

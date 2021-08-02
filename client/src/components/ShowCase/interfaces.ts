@@ -1,6 +1,12 @@
 namespace IShowCase {
   export type IState = {
-    showCaseList: string[];
+    showCaseList: {
+      [key: string]: {
+        date: number;
+        name: string;
+        photoSrc: string;
+      }[];
+    };
     loading: boolean;
     error: string;
   };

@@ -1,17 +1,15 @@
 import { FC } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "../../redux/store";
-import { Search } from "./Search";
+import { useAppSelector } from "../../redux/hooks";
+import { Search } from "../Search/Search";
+import { showCaseSelectors } from "./ShowCase.slice";
 import { ShowCaseList } from "./ShowCaseList";
 
 const ShowCase: FC = () => {
-  const { error, loading } = useSelector(({ showCase }: RootState) => ({
-    error: showCase.error,
-    loading: showCase.loading,
-  }));
+  const loading = useAppSelector(showCaseSelectors.selectLoading);
+  console.log(loading);
   return (
     <div className="wrapper show-case_wrapper">
-      {error}
+      {loading && "Загрузка"}
       <Search />
       <ShowCaseList />
     </div>

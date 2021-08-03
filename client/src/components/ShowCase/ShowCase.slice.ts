@@ -26,7 +26,7 @@ export const fetchShowCase = createAsyncThunk(
 			const data: string = json.data.fixed_height_downsampled_url;
 			return { data, name };
 		} catch (e) {
-			thunkApi.dispatch(addNotes({ notes: `Произошла ошибка на сервере` }));
+			thunkApi.dispatch(timeoutNotes({ notes: `Произошла ошибка на сервере` }));
 			throw e;
 		}
 	}

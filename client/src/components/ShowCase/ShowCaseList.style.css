@@ -1,0 +1,6 @@
+.showCaseList_wrapper {
+	border: 1px black solid;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+}

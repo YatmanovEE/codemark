@@ -1,0 +1,15 @@
+.search {
+	display: flex;
+	justify-content: center;
+}
+.search_input {
+	box-sizing: border-box;
+}
+.search_wrapper {
+	position: relative;
+}
+.search_error {
+	position: absolute;
+	left: 0px;
+	color: red;
+}

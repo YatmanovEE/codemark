@@ -1,8 +1,9 @@
-import { FC, useState } from "react";
+import { FC } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { timeoutNotes } from "../Notice/Notice.slice";
-import { clearValue, setValue } from "../Search/Search.slice";
-import { clearShowCaseList, showCaseSelectors } from "./ShowCase.slice";
+import { navSelectors } from "../Nav/Nav.slice";
+import { setValue } from "../Search/Search.slice";
+import { showCaseSelectors } from "./ShowCase.slice";
+import "./ShowCaseList.style.css";
 
 type ISortObj<T> = (arr: T[][]) => T[];
 
@@ -17,30 +18,14 @@ const sortObj: ISortObj<{ date: number; photoSrc: string; name: string }> = (
 };
 
 export const ShowCaseList: FC = () => {
-	const [selectors, setSelectors] = useState(true);
 	const showCase = useAppSelector(showCaseSelectors.selectShowCaseList);
+	const selector = useAppSelector(navSelectors.selectSelector);
 	const dispatch = useAppDispatch();
 	const keysList = Object.keys(showCase);
 	return (
-		<>
-			<button
-				className="btn btn_showCase"
-				onClick={() => setSelectors((prev) => !prev)}
-			>
-				{selectors ? "Группировать" : "Разгрупировать"}
-			</button>
-			<button
-				className="btn btn__showCase"
-				onClick={() => {
-					dispatch(clearValue());
-					dispatch(clearShowCaseList());
-					dispatch(timeoutNotes({ notes: "Список очищен" }));
-				}}
-			>
-				Очистить
-			</button>
+		<div className="container">
 			{keysList.length > 0 ? (
-				selectors ? (
+				selector ? (
 					sortObj(Object.values(showCase)).map((itemImage, keyItemImage) => (
 						<img
 							onClick={() =>
@@ -59,23 +44,26 @@ export const ShowCaseList: FC = () => {
 					keysList.map((keysListItem, keyShowCase) => {
 						return (
 							<div key={keyShowCase + keysListItem}>
-								<span>{keysListItem}</span>
-								{showCase[keysListItem].map((itemImage, keyItemImage) => {
-									return (
-										<img
-											onClick={() =>
-												dispatch(
-													setValue({
-														value: itemImage.name,
-													})
-												)
-											}
-											src={itemImage.photoSrc}
-											alt=""
-											key={itemImage.date + keyItemImage}
-										/>
-									);
-								})}
+								<h4>{keysListItem}</h4>
+								<div className="wrapper showCaseList_wrapper">
+									{showCase[keysListItem].map((itemImage, keyItemImage) => {
+										return (
+											<img
+												className="btn"
+												onClick={() =>
+													dispatch(
+														setValue({
+															value: itemImage.name,
+														})
+													)
+												}
+												src={itemImage.photoSrc}
+												alt=""
+												key={itemImage.date + keyItemImage}
+											/>
+										);
+									})}
+								</div>
 							</div>
 						);
 					})
@@ -83,6 +71,6 @@ export const ShowCaseList: FC = () => {
 			) : (
 				<span>Список пуст</span>
 			)}
-		</>
+		</div>
 	);
 };

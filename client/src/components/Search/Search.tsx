@@ -1,10 +1,11 @@
-import { FC, ReactEventHandler, useEffect, useState } from "react";
+import { FC, ReactEventHandler, useEffect } from "react";
 import { useAppDispatch } from "../../redux/hooks";
 import { fetchShowCase } from "../ShowCase/ShowCase.slice";
 import { setValue, clearError, createError } from "./Search.slice";
 import API from "../ShowCase/showCaseApi";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
+import "./Search.style.css";
 
 export const Search: FC = () => {
 	const { error, value, disabled } = useSelector((rootState: RootState) => {
@@ -14,29 +15,29 @@ export const Search: FC = () => {
 	const dispatch = useAppDispatch();
 	const inputHandler: ReactEventHandler<HTMLInputElement> = (e) => {
 		dispatch(setValue({ value: e.currentTarget.value }));
-		if (e.currentTarget.value.match(/[^A-Za-z,]/)) {
-			return dispatch(
+	};
+
+	useEffect(() => {
+		if (value.match(/[^A-Za-z,]/)) {
+			dispatch(
 				createError({
 					error: "Допустимы только английские буквы и запятая",
 				})
 			);
-		}
-		if (e.currentTarget.value === ",") {
-			return dispatch(
+		} else if (value === ",") {
+			dispatch(
 				createError({
 					error: "Нельзя отправлять только запятую",
 				})
 			);
-		}
-		if (e.currentTarget.value.length === 0) {
-			return dispatch(
+		} else if (value.length === 0) {
+			dispatch(
 				createError({
 					error: "Пустая строка",
 				})
 			);
-		}
-		dispatch(clearError());
-	};
+		} else dispatch(clearError());
+	}, [dispatch, value]);
 
 	const searchHandler: ReactEventHandler<HTMLButtonElement> = (e) => {
 		value.split(",").forEach((tagName, count) => {
@@ -50,23 +51,25 @@ export const Search: FC = () => {
 	};
 
 	return (
-		<>
+		<div className="search">
 			<div className="wrapper search_wrapper">
 				<input
 					type="text"
-					className="search"
+					className={`search_input input ${error && "input__error"}`}
 					value={value}
 					onChange={inputHandler}
 				/>
-				<span className="error search_error">{error}</span>
+				<div className="">
+					<span className="error search_error">{error}</span>
+				</div>
 			</div>
 			<button
-				className="btn btn_search"
+				className="btn search_btn btn__primary"
 				onClick={searchHandler}
 				disabled={disabled}
 			>
 				Поиск
 			</button>
-		</>
+		</div>
 	);
 };

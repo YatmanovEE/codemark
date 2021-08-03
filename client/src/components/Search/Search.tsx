@@ -15,6 +15,13 @@ export const Search: FC = () => {
 	const dispatch = useAppDispatch();
 	const inputHandler: ReactEventHandler<HTMLInputElement> = (e) => {
 		dispatch(setValue({ value: e.currentTarget.value }));
+		if (e.currentTarget.value.length === 0) {
+			dispatch(
+				createError({
+					error: "Пустая строка",
+				})
+			);
+		}
 	};
 
 	useEffect(() => {
@@ -28,12 +35,6 @@ export const Search: FC = () => {
 			dispatch(
 				createError({
 					error: "Нельзя отправлять только запятую",
-				})
-			);
-		} else if (value.length === 0) {
-			dispatch(
-				createError({
-					error: "Пустая строка",
 				})
 			);
 		} else dispatch(clearError());

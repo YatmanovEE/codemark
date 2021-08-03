@@ -1,6 +1,4 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Dispatch } from "react";
-import { DispatchProp } from "react-redux";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../../redux/store";
 import INotice from "./interfaces";
 

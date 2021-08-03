@@ -1,37 +1,43 @@
-import { FC, ReactEventHandler, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import {
-  clearError,
-  createError,
-  fetchShowCase,
-} from "../ShowCase/ShowCase.slice";
-import { searchSelectors, setValue } from "./Search.slice";
+import { FC, ReactEventHandler, useEffect, useState } from "react";
+import { useAppDispatch } from "../../redux/hooks";
+import { fetchShowCase } from "../ShowCase/ShowCase.slice";
+import { setValue, clearError, createError } from "./Search.slice";
 import API from "../ShowCase/showCaseApi";
-import { showCaseSelectors } from "../ShowCase/ShowCase.slice";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
 
 export const Search: FC = () => {
-  const error = useAppSelector(showCaseSelectors.selectError);
-  const value = useAppSelector(searchSelectors.selectValue);
+  const { error, value, disabled } = useSelector((rootState: RootState) => {
+    return rootState.searchValue;
+  });
+
   const dispatch = useAppDispatch();
   const inputHandler: ReactEventHandler<HTMLInputElement> = (e) => {
+    dispatch(setValue({ value: e.currentTarget.value }));
     if (e.currentTarget.value.match(/[^A-Za-z,]/)) {
-      dispatch(
+      return dispatch(
         createError({
           error: "Допустимы только английские буквы и запятая",
         })
       );
-    } else {
-      dispatch(setValue({ value: e.currentTarget.value }));
-      dispatch(clearError());
-      if (e.currentTarget.value === ",") {
-        dispatch(
-          createError({
-            error: "Нельзя отправлять только запятую",
-          })
-        );
-      }
     }
+    if (e.currentTarget.value === ",") {
+      return dispatch(
+        createError({
+          error: "Нельзя отправлять только запятую",
+        })
+      );
+    }
+    if (e.currentTarget.value.length === 0) {
+      return dispatch(
+        createError({
+          error: "Пустая строка",
+        })
+      );
+    }
+    dispatch(clearError());
   };
+
   const searchHandler: ReactEventHandler<HTMLButtonElement> = (e) => {
     value.split(",").forEach((tagName, count) => {
       dispatch(
@@ -42,6 +48,7 @@ export const Search: FC = () => {
       );
     });
   };
+
   return (
     <>
       <div className="wrapper search_wrapper">
@@ -56,7 +63,7 @@ export const Search: FC = () => {
       <button
         className="btn btn_search"
         onClick={searchHandler}
-        disabled={!!error}
+        disabled={disabled}
       >
         Поиск
       </button>

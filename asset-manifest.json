@@ -1,0 +1,20 @@
+{
+  "files": {
+    "main.css": "/codemark/static/css/main.a79e20a3.chunk.css",
+    "main.js": "/codemark/static/js/main.6181b3a4.chunk.js",
+    "main.js.map": "/codemark/static/js/main.6181b3a4.chunk.js.map",
+    "runtime-main.js": "/codemark/static/js/runtime-main.bc2879bc.js",
+    "runtime-main.js.map": "/codemark/static/js/runtime-main.bc2879bc.js.map",
+    "static/js/2.db18f0cf.chunk.js": "/codemark/static/js/2.db18f0cf.chunk.js",
+    "static/js/2.db18f0cf.chunk.js.map": "/codemark/static/js/2.db18f0cf.chunk.js.map",
+    "index.html": "/codemark/index.html",
+    "static/css/main.a79e20a3.chunk.css.map": "/codemark/static/css/main.a79e20a3.chunk.css.map",
+    "static/js/2.db18f0cf.chunk.js.LICENSE.txt": "/codemark/static/js/2.db18f0cf.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.bc2879bc.js",
+    "static/js/2.db18f0cf.chunk.js",
+    "static/css/main.a79e20a3.chunk.css",
+    "static/js/main.6181b3a4.chunk.js"
+  ]
+}

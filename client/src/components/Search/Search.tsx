@@ -1,7 +1,7 @@
 import { FC, ReactEventHandler, useEffect } from "react";
 import { useAppDispatch } from "../../redux/hooks";
 import { fetchShowCase } from "../ShowCase/ShowCase.slice";
-import { setValue, clearError, createError } from "./Search.slice";
+import { setValue, clearError, createError, setDisabled } from "./Search.slice";
 import API from "../ShowCase/showCaseApi";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
@@ -15,13 +15,6 @@ export const Search: FC = () => {
 	const dispatch = useAppDispatch();
 	const inputHandler: ReactEventHandler<HTMLInputElement> = (e) => {
 		dispatch(setValue({ value: e.currentTarget.value }));
-		if (e.currentTarget.value.length === 0) {
-			dispatch(
-				createError({
-					error: "Пустая строка",
-				})
-			);
-		}
 	};
 
 	useEffect(() => {
@@ -37,18 +30,33 @@ export const Search: FC = () => {
 					error: "Нельзя отправлять только запятую",
 				})
 			);
+		} else if (value === "") {
+			dispatch(
+				setDisabled({
+					disabled: true,
+				})
+			);
 		} else dispatch(clearError());
 	}, [dispatch, value]);
 
 	const searchHandler: ReactEventHandler<HTMLButtonElement> = (e) => {
-		value.split(",").forEach((tagName, count) => {
+		if (value.length === 0) {
 			dispatch(
-				fetchShowCase({
-					name: tagName,
-					url: `${API.fetchTag}&tag=${tagName}`,
+				createError({
+					error: "Пустая строка",
 				})
 			);
-		});
+		}
+		if (!error) {
+			value.split(",").forEach((tagName, count) => {
+				dispatch(
+					fetchShowCase({
+						name: tagName,
+						url: `${API.fetchTag}&tag=${tagName}`,
+					})
+				);
+			});
+		}
 	};
 
 	return (

@@ -26,6 +26,12 @@ const searchSlice = createSlice({
 			state.error = "";
 			state.disabled = false;
 		},
+		setDisabled(
+			state,
+			action: PayloadAction<Pick<ISearch.IState, "disabled">>
+		) {
+			state.disabled = action.payload.disabled;
+		},
 	},
 });
 export namespace searchSelectors {
@@ -33,7 +39,7 @@ export namespace searchSelectors {
 	export const selectError = (state: RootState) => state.searchValue.error;
 }
 
-export const { setValue, clearValue, createError, clearError } =
+export const { setValue, clearValue, createError, clearError, setDisabled } =
 	searchSlice.actions;
 
 export default searchSlice.reducer;

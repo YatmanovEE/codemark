@@ -15,13 +15,7 @@ const ShowCase: FC = () => {
 				<Search />
 			</div>
 			<ShowCaseList />
-			<div className="loader">
-				{loading && (
-					<div className="lds-circle">
-						<div />
-					</div>
-				)}
-			</div>
+			{loading && "Загружается что-то объемное, подождите!)"}
 		</div>
 	);
 };

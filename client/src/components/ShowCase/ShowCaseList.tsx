@@ -47,7 +47,7 @@ export const ShowCaseList: FC = () => {
 								<h4>{keysListItem}</h4>
 								<div className="wrapper showCaseList_wrapper">
 									{showCase[keysListItem].map((itemImage, keyItemImage) => {
-										return (
+										return !itemImage.loading ? (
 											<img
 												className="btn"
 												onClick={() =>
@@ -61,6 +61,15 @@ export const ShowCaseList: FC = () => {
 												alt=""
 												key={itemImage.date + keyItemImage}
 											/>
+										) : (
+											<div
+												className="loader loader_image"
+												key={keyItemImage + "loader"}
+											>
+												<div className="lds-circle">
+													<div />
+												</div>
+											</div>
 										);
 									})}
 								</div>

@@ -13,9 +13,17 @@
 	height: 64px;
 	margin: 8px;
 	border-radius: 50%;
-	background: #fff;
+	background: black;
 	animation: lds-circle 2.4s cubic-bezier(0, 0.2, 0.8, 1) infinite;
 }
+
+.loader_image {
+	display: flex;
+	position: relative;
+	top: 0;
+	left: 0;
+}
+
 @keyframes lds-circle {
 	0%,
 	100% {

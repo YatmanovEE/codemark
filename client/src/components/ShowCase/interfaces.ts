@@ -1,12 +1,16 @@
 namespace IShowCase {
+	export type showItem = {
+		date: number;
+		name: string;
+		photoSrc: string;
+		loading: boolean;
+	};
+
 	export type IState = {
 		showCaseList: {
-			[key: string]: {
-				date: number;
-				name: string;
-				photoSrc: string;
-			}[];
+			[key: string]: showItem[];
 		};
+		pendingItem: showItem;
 		loading: boolean;
 	};
 	export type IFetchProps = {

@@ -1,11 +1,17 @@
 import { timeoutNotes } from "./../Notice/Notice.slice";
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../../redux/store";
 import { addNotes } from "../Notice/Notice.slice";
 import IShowCase from "./interfaces";
 
 const initialState: IShowCase.IState = {
 	showCaseList: {},
+	pendingItem: {
+		date: 0,
+		name: "",
+		photoSrc: "",
+		loading: false,
+	},
 	loading: false,
 };
 
@@ -23,10 +29,51 @@ export const fetchShowCase = createAsyncThunk(
 				});
 			}
 			const json = await response.json();
-			const data: string = json.data.fixed_height_downsampled_url;
-			return { data, name };
+			const data: string = await json.data.fixed_height_downsampled_url;
+			let date = Date.now();
+			thunkApi.dispatch(
+				fetchImage({
+					name,
+					date,
+					src: data,
+				})
+			);
+			return { data, name, date };
 		} catch (e) {
 			thunkApi.dispatch(timeoutNotes({ notes: `Произошла ошибка на сервере` }));
+			throw e;
+		}
+	}
+);
+
+export const fetchImage = createAsyncThunk(
+	"ShowCase/fetchImage",
+	async (
+		{
+			name,
+			date,
+			src,
+		}: {
+			name: string;
+			date: number;
+			src: string;
+		},
+		thunkApi
+	) => {
+		try {
+			let url = window.URL;
+			let data = await fetch(src);
+			let blob = await data.blob();
+			return {
+				photoSrc: url.createObjectURL(blob),
+				date,
+				name,
+				loading: false,
+			};
+		} catch (e) {
+			thunkApi.dispatch(
+				timeoutNotes({ notes: `Похоже что картинку не удалось загрузить` })
+			);
 			throw e;
 		}
 	}
@@ -47,11 +94,15 @@ const showCaseSlice = createSlice({
 		builder.addCase(fetchShowCase.fulfilled, (state, action) => {
 			state.loading = false;
 			let getter = state.showCaseList[action.payload.name] ?? [];
-			getter.push({
-				photoSrc: action.payload.data,
-				date: Date.now(),
+			let date = action.payload.date;
+			let pending: IShowCase.showItem = (state.pendingItem = {
+				photoSrc: "",
+				date: date,
 				name: action.payload.name,
+				loading: true,
 			});
+			getter.push(pending);
+
 			state.showCaseList[action.payload.name] = getter;
 		});
 		builder.addCase(fetchShowCase.pending, (state) => {
@@ -59,6 +110,16 @@ const showCaseSlice = createSlice({
 		});
 		builder.addCase(fetchShowCase.rejected, (state) => {
 			state.loading = false;
+		});
+		builder.addCase(fetchImage.fulfilled, (state, action) => {
+			let index = state.showCaseList[action.payload.name].findIndex(
+				(val) => val.date === action.payload.date
+			);
+			state.showCaseList[action.payload.name][index] = {
+				...state.showCaseList[action.payload.name][index],
+				loading: false,
+				photoSrc: action.payload.photoSrc,
+			};
 		});
 	},
 });
